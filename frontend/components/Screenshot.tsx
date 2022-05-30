@@ -1,8 +1,14 @@
 import Image from 'next/image'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
-import { useContractRead, useContractWrite, useEnsName } from 'wagmi'
+import {
+  useContractRead,
+  useContractWrite,
+  useEnsName,
+  useAccount,
+} from 'wagmi'
 import { useInView } from 'react-intersection-observer'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 import { contractAddress } from '../eth'
 import { Data } from '../data/posts'
@@ -73,6 +79,8 @@ export function Screenshot({ data }: { data: Data }) {
     },
   )
 
+  const { data: connection } = useAccount()
+
   useEffect(() => {
     setLoaded(true)
   }, [])
@@ -95,17 +103,28 @@ export function Screenshot({ data }: { data: Data }) {
       {pageIsLoaded && (
         <div className="h-10">
           {canMint ? (
-            <p
-              className="pt-1 text-white text-center cursor-pointer"
-              onClick={() => {
-                if (!isMinting) {
-                  setIsMinting(true)
-                  write()
-                }
-              }}
-            >
-              {isMinting ? 'minting...' : 'mint 0.08 ETH'}
-            </p>
+            <>
+              {connection && (
+                <p
+                  className="pt-1 text-white text-center cursor-pointer"
+                  onClick={() => {
+                    if (!isMinting) {
+                      setIsMinting(true)
+                      write()
+                    }
+                  }}
+                >
+                  {isMinting ? 'minting...' : 'mint 0.08 ETH'}
+                </p>
+              )}
+              {!connection && (
+                <div>
+                  <p className="pt-1 text-white text-center">
+                    connect wallet to mint
+                  </p>
+                </div>
+              )}
+            </>
           ) : (
             <>
               {isOwned.isSuccess && isOwned.data && (
