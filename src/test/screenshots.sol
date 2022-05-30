@@ -26,4 +26,11 @@ contract CatTest is DSTest {
 
         shots.mint{value: 80000000000000000}(1557629786, sig);
     }
+
+    function testFailMintTwice() public {
+        bytes
+            memory sig = hex"1762b7abad989c626f296c882be77d39b07bcb5ea4aa779fd7d2fa4732e67a96154bbd3762809a600f4204f6cafa2da808cfad5d0415b348d5808c555664db1d";
+        shots.mint{value: 80000000000000000}(1557629786, sig);
+        shots.mint{value: 80000000000000000}(1557629786, sig);
+    }
 }
