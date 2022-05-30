@@ -1,1 +1,3 @@
+CatTest:testFailMintTwice() (gas: 83045)
+CatTest:testRoyaltyInfo() (gas: 8396)
 CatTest:testSignature() (gas: 69987)
