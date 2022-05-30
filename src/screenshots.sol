@@ -35,33 +35,12 @@ contract screenshots is Ownable, ERC721 {
         signer = _signer;
     }
 
-    function updateSigner(address _signer) public onlyOwner {
-        signer = _signer;
-    }
-
-    function updateMintPrice(uint256 _price) public onlyOwner {
-        mintPrice = _price;
-    }
-
-    function setBaseURI(string memory _baseURI) public onlyOwner {
-        baseURI = _baseURI;
-    }
-
-    function setPublicMint(bool _isPublicMintActive) public onlyOwner {
-        publicMintActive = _isPublicMintActive;
-    }
-
-    function setRoyaltyPct(uint256 newRoyaltyPct) public onlyOwner {
-        _royaltyPct = newRoyaltyPct;
-    }
-
     function mint(uint256 tokenID, bytes memory signature) public payable {
-        // Minor gas optimization here that creates a quirk – instead of creating
-        // a separate mapping for what tokens have been minted, we just check
-        // the ownerOf map for ownership by the zero address [the default value].
-        // This means if the tokenID is ever burned, it can be minted again.
-        // I'm ok with this, it's ~15-20k gas to write a separate mapping.
-        require(ownerOf[tokenID] == address(0), "Token already minted");
+        // There used to be a check here to see if the NFT was minted, but
+        // solmate's _mint function does it internally. If you're modifying
+        // this contract and you're adding more side effects to this contract
+        // besides just minting, you may want to re-add a check to see if it's
+        // minted.
 
         require(publicMintActive, "Public minting is not active");
         require(msg.value == mintPrice, "Wrong price");
@@ -87,6 +66,26 @@ contract screenshots is Ownable, ERC721 {
         _mint(this.owner(), tokenID);
     }
 
+    function updateSigner(address _signer) public onlyOwner {
+        signer = _signer;
+    }
+
+    function updateMintPrice(uint256 _price) public onlyOwner {
+        mintPrice = _price;
+    }
+
+    function setBaseURI(string memory _baseURI) public onlyOwner {
+        baseURI = _baseURI;
+    }
+
+    function setPublicMint(bool _isPublicMintActive) public onlyOwner {
+        publicMintActive = _isPublicMintActive;
+    }
+
+    function setRoyaltyPct(uint256 newRoyaltyPct) public onlyOwner {
+        _royaltyPct = newRoyaltyPct;
+    }
+
     function tokenURI(uint256 tokenID)
         public
         view
@@ -105,6 +104,7 @@ contract screenshots is Ownable, ERC721 {
         tokenContract.transfer(this.owner(), _amount);
     }
 
+    // solhint-disable-next-line no-unused-vars
     function royaltyInfo(uint256 _tokenId, uint256 _salePrice)
         external
         view
