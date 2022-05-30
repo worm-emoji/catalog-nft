@@ -40,8 +40,7 @@ function Home({
               luke.cat
             </a>{' '}
             for the past few years. now, you can own any screenshot from the
-            catalog as an NFT. the collection currently contains{' '}
-            {screenshots.length} screenshots.
+            catalog of {screenshots.length} NFTs.
           </p>
           <p className="self-start">
             -{' '}
