@@ -1,7 +1,7 @@
 import type { InferGetServerSidePropsType, NextPage } from 'next'
 import Head from 'next/head'
 import { Screenshot } from '../components/Screenshot'
-import { Data, posts } from '../data/posts'
+import { posts } from '../data/posts'
 
 export async function getServerSideProps() {
   return {
@@ -24,7 +24,7 @@ function Home({
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="mint from the screenshot catalog" />
-        <meta property="og:image" content="https://mint.luke.cat/preview.png" />
+        <meta property="og:image" content="https://mint.luke.cat/og.png" />
       </Head>
       <div className="flex w-100 justify-center">
         <div className="px-2 flex flex-col justify-center items-center w-100 max-w-md gap-5 text-white pb-12">
