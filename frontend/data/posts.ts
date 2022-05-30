@@ -1,6 +1,6 @@
 import postsData from './posts.json'
 import cheerio from 'cheerio'
-import orderBy from 'lodash.orderBy'
+import orderBy from 'lodash.orderby'
 import { getSignature } from './sign'
 
 export type Data = {
