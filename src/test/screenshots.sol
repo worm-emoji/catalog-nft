@@ -33,4 +33,10 @@ contract CatTest is DSTest {
         shots.mint{value: 80000000000000000}(1557629786, sig);
         shots.mint{value: 80000000000000000}(1557629786, sig);
     }
+
+    function testRoyaltyInfo() public {
+        (address dest, uint256 royalty) = shots.royaltyInfo(0, 150);
+        assertEq(dest, address(shots));
+        assertEq(royalty, 15);
+    }
 }
