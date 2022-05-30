@@ -27,9 +27,9 @@ function Home({
         <meta property="og:image" content="https://mint.luke.cat/preview.png" />
       </Head>
       <div className="flex w-100 justify-center">
-        <div className="flex flex-col justify-center items-center w-100 max-w-md gap-5 text-white pb-12">
+        <div className="px-2 flex flex-col justify-center items-center w-100 max-w-md gap-5 text-white pb-12">
           <h2 className="text-2xl">mint from the screenshot catalog</h2>
-          <p className="">
+          <p>
             i&apos;ve been collecting screenshots on{' '}
             <a
               className="underline"
