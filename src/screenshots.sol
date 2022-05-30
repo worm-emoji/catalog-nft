@@ -28,14 +28,6 @@ contract screenshots is Ownable, ERC721 {
     bool public publicMintActive = false;
 
     uint256 private _royaltyPct = 10;
-    uint256 private locked = 1;
-
-    modifier nonReentrant() {
-        require(locked == 1, "REENTRANCY");
-        locked = 2;
-        _;
-        locked = 1;
-    }
 
     constructor(address _signer)
         ERC721("screenshot catalog by worm_emoji", "CAT")
@@ -63,11 +55,7 @@ contract screenshots is Ownable, ERC721 {
         _royaltyPct = newRoyaltyPct;
     }
 
-    function mint(uint256 tokenID, bytes memory signature)
-        public
-        payable
-        nonReentrant
-    {
+    function mint(uint256 tokenID, bytes memory signature) public payable {
         // Minor gas optimization here that creates a quirk – instead of creating
         // a separate mapping for what tokens have been minted, we just check
         // the ownerOf map for ownership by the zero address [the default value].
