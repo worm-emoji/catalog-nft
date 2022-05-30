@@ -1,5 +1,6 @@
-import posts from './posts.json'
+import postsData from './posts.json'
 import cheerio from 'cheerio'
+import orderBy from 'lodash.orderBy'
 import { getSignature } from './sign'
 
 export type Data = {
@@ -11,6 +12,8 @@ export type Data = {
   image?: string
   signature?: string
   id?: number
+  width?: number
+  height?: number
   attributes?: {
     trait_type: string
     value: string | number
@@ -37,27 +40,40 @@ const getName = (tsv: Date) => {
   return `Screenshot ${year}-${month}-${day} at ${hours}.${minutes}.${seconds}`
 }
 
-posts.allEntries.map((post) => {
-  const $ = cheerio.load(post.html)
-  const url = $('img').attr('src')
-  const ts = post.updated / 1000
-  const signature = getSignature(ts)
-  allPosts[ts] = {
-    id: ts,
-    image: url,
-    name: getName(new Date(post.updated)),
-    external_url: post.absoluteURL,
-    signature,
-    attributes: [
-      {
-        trait_type: 'Year',
-        value: new Date(post.updated).getFullYear().toString(),
-      },
-      {
-        display_type: 'date',
-        trait_type: 'taken at',
-        value: ts,
-      },
-    ],
-  }
+postsData.allEntries = postsData.allEntries.filter((p) => {
+  // filter out invalid image
+  return p.created != 1567929626847
 })
+
+export const posts = orderBy(
+  postsData.allEntries.map((post) => {
+    const $ = cheerio.load(post.html)
+    const url = $('img').attr('src')
+    const ts = post.updated / 1000
+    const signature = getSignature(ts)
+    const p = {
+      id: ts,
+      image: url,
+      name: getName(new Date(post.updated)),
+      external_url: post.absoluteURL,
+      signature,
+      width: post.thumbnail.large.width,
+      height: post.thumbnail.large.height,
+      attributes: [
+        {
+          trait_type: 'Year',
+          value: new Date(post.updated).getFullYear().toString(),
+        },
+        {
+          display_type: 'date',
+          trait_type: 'taken at',
+          value: ts,
+        },
+      ],
+    }
+    allPosts[ts] = p
+    return p
+  }),
+  'id',
+  'desc',
+)

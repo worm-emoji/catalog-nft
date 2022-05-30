@@ -10,11 +10,20 @@
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.2.1",
+    "@types/lodash.merge": "^4.6.7",
+    "@types/lodash.orderby": "^4.6.7",
+    "@types/lodash.sortby": "^4.7.7",
+    "autoprefixer": "^10.4.7",
     "cheerio": "^1.0.0-rc.11",
     "ethers": "^5.6.8",
+    "lodash.merge": "^4.6.2",
+    "lodash.orderby": "^4.6.0",
     "next": "12.1.6",
+    "postcss": "^8.4.14",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-intersection-observer": "^9.2.0",
+    "tailwindcss": "^3.0.24",
     "wagmi": "^0.4.3"
   },
   "devDependencies": {

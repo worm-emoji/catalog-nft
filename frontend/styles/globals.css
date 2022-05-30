@@ -1,9 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Iosevka SS05 Web';
+  font-display: swap;
+  font-weight: 400;
+  font-stretch: normal;
+  font-style: normal;
+  src: url(https://cdn.ylukem.com/fonts/iosevka/woff2/iosevka-ss05-regular.woff2)
+      format('woff2'),
+    url(https://cdn.ylukem.com/fonts/iosevka/woff/iosevka-ss05-regular.woff)
+      format('woff'),
+    url(https://cdn.ylukem.com/fonts/iosevka/ttf/iosevka-ss05-regular.ttf)
+      format('truetype');
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Iosevka SS05 Web', monospace !important;
+  background-color: rgba(93, 91, 91, 1);
 }
 
 a {
