@@ -104,8 +104,7 @@ contract screenshots is Ownable, ERC721 {
         tokenContract.transfer(this.owner(), _amount);
     }
 
-    // solhint-disable-next-line no-unused-vars
-    function royaltyInfo(uint256 _tokenId, uint256 _salePrice)
+    function royaltyInfo(uint256, uint256 _salePrice)
         external
         view
         returns (address receiver, uint256 royaltyAmount)
