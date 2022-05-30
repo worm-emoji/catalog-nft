@@ -35,13 +35,8 @@ function OwnedBy({ address }: { address: string }) {
   )
 }
 
-export function Screenshot({ data }: { data: Data }) {
-  const { ref, inView } = useInView({
-    /* Optional options */
-    threshold: 0,
-  })
-
-  const [pageIsLoaded, setLoaded] = useState(false)
+function MintButton({ data }: { data: Data }) {
+  const { data: connection } = useAccount()
   const [isMinting, setIsMinting] = useState(false)
 
   const isOwned = useContractRead(
@@ -54,9 +49,10 @@ export function Screenshot({ data }: { data: Data }) {
       args: data.id,
       cacheOnBlock: false,
       suspense: true,
-      enabled: inView && pageIsLoaded,
     },
   )
+
+  const canMint = !isOwned.data || isOwned.data.toString() == zero
 
   const {
     data: _,
@@ -78,14 +74,51 @@ export function Screenshot({ data }: { data: Data }) {
       overrides: { value: ethers.utils.parseEther('0.08') },
     },
   )
+  return (
+    <div className="h-10">
+      {canMint ? (
+        <>
+          {connection && (
+            <p
+              className="pt-1 text-white text-center cursor-pointer"
+              onClick={() => {
+                if (!isMinting) {
+                  setIsMinting(true)
+                  write()
+                }
+              }}
+            >
+              {isMinting ? 'minting...' : 'mint 0.08 ETH'}
+            </p>
+          )}
+          {!connection && (
+            <div>
+              <p className="pt-1 text-white text-center">
+                connect wallet to mint
+              </p>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {isOwned.isSuccess && isOwned.data && (
+            <OwnedBy address={isOwned.data.toString()} />
+          )}
+        </>
+      )}
+    </div>
+  )
+}
 
-  const { data: connection } = useAccount()
-
+export function Screenshot({ data }: { data: Data }) {
+  const { ref, inView } = useInView({
+    /* Optional options */
+    threshold: 0,
+  })
+  const [pageIsLoaded, setLoaded] = useState(false)
   useEffect(() => {
     setLoaded(true)
   }, [])
-
-  const canMint = !isOwned.data || isOwned.data.toString() == zero
 
   if (!data.image || !data.height || !data.width) {
     return <></>
@@ -100,40 +133,7 @@ export function Screenshot({ data }: { data: Data }) {
         height={data.height}
         layout="responsive"
       />
-      {pageIsLoaded && (
-        <div className="h-10">
-          {canMint ? (
-            <>
-              {connection && (
-                <p
-                  className="pt-1 text-white text-center cursor-pointer"
-                  onClick={() => {
-                    if (!isMinting) {
-                      setIsMinting(true)
-                      write()
-                    }
-                  }}
-                >
-                  {isMinting ? 'minting...' : 'mint 0.08 ETH'}
-                </p>
-              )}
-              {!connection && (
-                <div>
-                  <p className="pt-1 text-white text-center">
-                    connect wallet to mint
-                  </p>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              {isOwned.isSuccess && isOwned.data && (
-                <OwnedBy address={isOwned.data.toString()} />
-              )}
-            </>
-          )}
-        </div>
-      )}
+      {pageIsLoaded && inView && <MintButton data={data} />}
     </div>
   )
 }
