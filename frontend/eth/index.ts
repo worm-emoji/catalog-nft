@@ -1,13 +1,13 @@
 import { configureChains, chain, createClient } from 'wagmi'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import { getDefaultWallets } from '@rainbow-me/rainbowkit'
 
-const alchemyId = process.env.ALCHEMY_ID
+const infuraId = process.env.INFURA_ID
 
 export const { chains, provider } = configureChains(
   [chain.rinkeby],
-  [alchemyProvider({ alchemyId }), publicProvider()],
+  [infuraProvider({ infuraId }), publicProvider()],
 )
 
 const { connectors } = getDefaultWallets({
