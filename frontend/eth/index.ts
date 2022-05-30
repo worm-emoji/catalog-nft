@@ -3,7 +3,7 @@ import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import { getDefaultWallets } from '@rainbow-me/rainbowkit'
 
-const infuraId = process.env.INFURA_ID
+const infuraId = process.env.NEXT_PUBLIC_INFURA_ID
 
 export const { chains, provider } = configureChains(
   [chain.rinkeby],
