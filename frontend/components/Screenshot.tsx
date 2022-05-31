@@ -29,13 +29,15 @@ function OwnedBy({ address }: { address: string }) {
     return <p className="pt-1 text-white text-center">{address}</p>
   }
   return (
-    <p className="pt-1 text-white text-center underline">
+    <p className="pt-1 text-white text-center">
+      owned by{' '}
       <a
+        className="underline underline-offset-3"
         href={`https://context.app/${address}?collection=screenshot-catalog-by-worm_emoji`}
         target="_blank"
         rel="noreferrer"
       >
-        owned by {data != null ? data : substrAddress(address)}
+        {data != null ? data : substrAddress(address)}
       </a>
     </p>
   )
