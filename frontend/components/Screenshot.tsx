@@ -54,12 +54,7 @@ function MintButton({ data }: { data: Data }) {
 
   const canMint = !isOwned.data || isOwned.data.toString() == zero
 
-  const {
-    data: _,
-    isError,
-    isLoading,
-    write,
-  } = useContractWrite(
+  const { write } = useContractWrite(
     {
       addressOrName: contractAddress,
       contractInterface: abi,
@@ -110,7 +105,13 @@ function MintButton({ data }: { data: Data }) {
   )
 }
 
-export function Screenshot({ data }: { data: Data }) {
+export function Screenshot({
+  data,
+  isIndex,
+}: {
+  data: Data
+  isIndex?: boolean
+}) {
   const { ref, inView } = useInView({
     threshold: 0,
     rootMargin: '0px 0px 500px 0px',
@@ -126,18 +127,30 @@ export function Screenshot({ data }: { data: Data }) {
 
   return (
     <div className="w-full px-2" ref={ref}>
-      <Link href={`/s/${data.id}`}>
-        <a>
-          <Image
-            alt={data.name}
-            src={data.image}
-            width={data.width}
-            height={data.height}
-            layout="responsive"
-          />
-        </a>
-      </Link>
-      {pageIsLoaded && inView && <MintButton data={data} />}
+      {isIndex ? (
+        <Image
+          alt={data.name}
+          src={data.image}
+          width={data.width}
+          height={data.height}
+          layout="responsive"
+        />
+      ) : (
+        <Link href={`/s/${data.id}`}>
+          <a>
+            <Image
+              alt={data.name}
+              src={data.image}
+              width={data.width}
+              height={data.height}
+              layout="responsive"
+            />
+          </a>
+        </Link>
+      )}
+      <div className={`${isIndex ? 'mt-5' : ''}`}>
+        {pageIsLoaded && inView && <MintButton data={data} />}
+      </div>
     </div>
   )
 }

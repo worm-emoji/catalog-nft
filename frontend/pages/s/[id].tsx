@@ -41,12 +41,13 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
         <meta property="og:image" content={post.image} />
       </Head>
       <div className="flex w-100 justify-center">
-        <div className="px-2 py-5 flex flex-col justify-center items-center w-100 max-w-xl gap-5 text-white pb-12">
+        <div className="px-2 py-5 flex flex-col justify-center items-center w-100 max-w-xl text-white ">
           <h2 className="text-2xl">{post.name}</h2>
-          <Screenshot key={post.id} data={post} />
         </div>
       </div>
-      <p className="text-center text-white underline-offset-2 underline">
+      <Screenshot key={post.id} data={post} isIndex />
+
+      <p className="text-center text-white underline-offset-2 underline pt-12">
         <Link href="/">
           <a>see more screenshots</a>
         </Link>
