@@ -8,7 +8,6 @@ import {
   useAccount,
 } from 'wagmi'
 import { useInView } from 'react-intersection-observer'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 import { contractAddress } from '../eth'
 import { Data } from '../data/posts'
@@ -113,8 +112,8 @@ function MintButton({ data }: { data: Data }) {
 
 export function Screenshot({ data }: { data: Data }) {
   const { ref, inView } = useInView({
-    /* Optional options */
     threshold: 0,
+    rootMargin: '0px 0px 500px 0px',
   })
   const [pageIsLoaded, setLoaded] = useState(false)
   useEffect(() => {
