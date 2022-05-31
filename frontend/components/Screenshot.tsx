@@ -13,6 +13,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { contractAddress } from '../eth'
 import { Data } from '../data/posts'
 import abi from '../eth/abi.json'
+import Link from 'next/link'
 
 const zero = '0x0000000000000000000000000000000000000000'
 
@@ -126,13 +127,17 @@ export function Screenshot({ data }: { data: Data }) {
 
   return (
     <div className="w-full px-2" ref={ref}>
-      <Image
-        alt={data.name}
-        src={data.image}
-        width={data.width}
-        height={data.height}
-        layout="responsive"
-      />
+      <Link href={`/s/${data.id}`}>
+        <a>
+          <Image
+            alt={data.name}
+            src={data.image}
+            width={data.width}
+            height={data.height}
+            layout="responsive"
+          />
+        </a>
+      </Link>
       {pageIsLoaded && inView && <MintButton data={data} />}
     </div>
   )
