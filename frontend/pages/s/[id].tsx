@@ -25,6 +25,10 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
 }
 
 function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
+  if (!post) {
+    return <p>Post not found</p>
+  }
+
   return (
     <div>
       <Head>
