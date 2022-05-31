@@ -6,7 +6,7 @@ import { getDefaultWallets } from '@rainbow-me/rainbowkit'
 const infuraId = process.env.NEXT_PUBLIC_INFURA_ID
 
 export const { chains, provider } = configureChains(
-  [chain.rinkeby],
+  [chain.mainnet],
   [infuraProvider({ infuraId }), publicProvider()],
 )
 
@@ -21,4 +21,4 @@ export const wagmiClient = createClient({
   provider,
 })
 
-export const contractAddress = '0x1C0353C63A975CA2d22E188e39aFF28cE5b9634F'
+export const contractAddress = '0x45e71e4c25ac65c0a553e08c78d1e821103e3efa'
