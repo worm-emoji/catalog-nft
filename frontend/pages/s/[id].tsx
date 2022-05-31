@@ -33,9 +33,8 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
           property="og:description"
           content="i've been collecting screenshots on luke.cat for the past few years. now, you can own any screenshot from the catalog as an NFT."
         />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="mint from the screenshot catalog" />
-        <meta property="og:image" content="https://mint.luke.cat/og.png" />
+        <meta name="twitter:title" content={post.name} />
+        <meta property="og:image" content={post.image} />
       </Head>
       <div className="flex w-100 justify-center">
         <div className="px-2 py-5 flex flex-col justify-center items-center w-100 max-w-xl gap-5 text-white pb-12">
