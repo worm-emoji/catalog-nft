@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.2.1",
+    "@types/lodash.shuffle": "^4.2.7",
     "autoprefixer": "^10.4.7",
     "cheerio": "^1.0.0-rc.11",
     "ethers": "^5.6.8",
     "lodash.merge": "^4.6.2",
     "lodash.orderby": "^4.6.0",
+    "lodash.shuffle": "^4.2.0",
     "next": "12.1.6",
     "postcss": "^8.4.14",
     "react": "18.1.0",
