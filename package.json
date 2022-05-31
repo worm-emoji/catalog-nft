@@ -20,5 +20,8 @@
     "prettier-plugin-solidity": "^1.0.0-beta.19",
     "solhint": "^3.3.6"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/lodash.shuffle": "^4.2.7",
+    "lodash.shuffle": "^4.2.0"
+  }
 }

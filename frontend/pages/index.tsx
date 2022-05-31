@@ -1,5 +1,7 @@
 import type { InferGetServerSidePropsType, NextPage } from 'next'
 import Head from 'next/head'
+import { useState } from 'react'
+import shuffle from 'lodash.shuffle'
 import { Screenshot } from '../components/Screenshot'
 import { posts } from '../data/posts'
 
@@ -14,6 +16,7 @@ export async function getServerSideProps() {
 function Home({
   screenshots,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [shots, setShots] = useState(screenshots)
   return (
     <div>
       <Head>
@@ -52,10 +55,18 @@ function Home({
               @worm_emoji
             </a>
           </p>
+          <p
+            className="cursor-pointer"
+            onClick={() => {
+              setShots(shuffle(screenshots))
+            }}
+          >
+            shuffle order
+          </p>
         </div>
       </div>
       <div className="grid sm:grid-cols-2 gap-2">
-        {screenshots.map((post) => {
+        {shots.map((post) => {
           return <Screenshot key={post.id} data={post} />
         })}
       </div>
