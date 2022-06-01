@@ -49,6 +49,9 @@ export const posts = orderBy(
   postsData.allEntries.map((post) => {
     const $ = cheerio.load(post.html)
     const url = $('img').attr('src')
+    const width = Number($('img').attr('width'))
+    const height = Number($('img').attr('height'))
+
     const ts = post.updated / 1000
     const signature = getSignature(ts)
     const p = {
@@ -57,8 +60,8 @@ export const posts = orderBy(
       name: getName(new Date(post.updated)),
       external_url: post.absoluteURL,
       signature,
-      width: post.thumbnail.large.width,
-      height: post.thumbnail.large.height,
+      width,
+      height,
       attributes: [
         {
           trait_type: 'Year',
