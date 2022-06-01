@@ -1,5 +1,6 @@
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
-import { allPosts } from '../../data/posts'
+import { getAllPosts, Data } from '../../data/posts'
+import fs from 'fs'
 import { Screenshot } from '../../components/Screenshot'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -10,6 +11,8 @@ type Post = {
 }
 
 export async function getStaticPaths() {
+  const { allPosts } = await getAllPosts()
+  fs.writeFileSync('/tmp/posts.json', JSON.stringify(allPosts))
   return {
     paths: Object.keys(allPosts).map((id) => ({ params: { id } })),
     fallback: true, // false or 'blocking'
@@ -17,6 +20,9 @@ export async function getStaticPaths() {
 }
 
 export const getStaticProps = async (context: GetStaticPropsContext) => {
+  const allPosts: { [id: string]: Data } = JSON.parse(
+    fs.readFileSync('/tmp/posts.json', 'utf8'),
+  )
   return {
     props: {
       post: allPosts[String(context.params?.id)],

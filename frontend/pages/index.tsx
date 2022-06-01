@@ -1,11 +1,12 @@
-import type { InferGetServerSidePropsType, NextPage } from 'next'
+import type { InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
 import { useState } from 'react'
 import shuffle from 'lodash.shuffle'
 import { Screenshot } from '../components/Screenshot'
-import { posts } from '../data/posts'
+import { getAllPosts } from '../data/posts'
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
+  const { posts } = await getAllPosts()
   return {
     props: {
       screenshots: posts,
@@ -13,9 +14,7 @@ export async function getServerSideProps() {
   }
 }
 
-function Home({
-  screenshots,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+function Home({ screenshots }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [shots, setShots] = useState(screenshots)
   return (
     <div>
