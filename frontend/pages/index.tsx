@@ -31,10 +31,13 @@ function Home({ screenshots }: InferGetStaticPropsType<typeof getStaticProps>) {
       <div className="flex w-100 justify-center">
         <div className="px-2 flex flex-col justify-center items-center w-100 max-w-md gap-5 text-white pb-12">
           <h2 className="text-2xl">mint from the screenshot catalog</h2>
+          <h2 className="pt-2 text-lg underline underline-offset-4 self-start">
+            about
+          </h2>
           <p>
             i&apos;ve been collecting screenshots on{' '}
             <a
-              className="underline"
+              className="underline underline-offset-1"
               href="https://luke.cat"
               target="_blank"
               rel="noreferrer"
@@ -44,7 +47,25 @@ function Home({ screenshots }: InferGetStaticPropsType<typeof getStaticProps>) {
             for the past few years. now, you can own any screenshot from the
             catalog of {screenshots.length} NFTs.
           </p>
+          <h2 className="text-lg underline underline-offset-4 self-start">
+            roadmap &amp; utility
+          </h2>
           <p className="self-start">
+            collecting a screenshot also grants you access to the token-gated{' '}
+            <a
+              className="underline underline-offset-1"
+              href="https://discord.gg/z2jMqkgBHJ"
+              target="_blank"
+              rel="noreferrer"
+            >
+              official project discord
+            </a>
+            . the discord is a place to ask questions, share screenshots you
+            love, and commiserate with fellow screenshot lovers and
+            appreciators. we can&apos;t wait to see you there.
+          </p>
+
+          <p className="self-start pb-12">
             -{' '}
             <a
               target="_blank"
@@ -54,6 +75,7 @@ function Home({ screenshots }: InferGetStaticPropsType<typeof getStaticProps>) {
               @worm_emoji
             </a>
           </p>
+
           <p
             className="cursor-pointer"
             onClick={() => {
