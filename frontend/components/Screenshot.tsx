@@ -15,6 +15,7 @@ import abi from '../eth/abi.json'
 import Link from 'next/link'
 
 const zero = '0x0000000000000000000000000000000000000000'
+const price = '0.08'
 
 function substrAddress(address: string) {
   return address.substr(0, 6) + '...' + address.substr(address.length - 4)
@@ -74,7 +75,7 @@ function MintButton({ data }: { data: Data }) {
         setIsMinting(false)
         isOwned.refetch()
       },
-      overrides: { value: ethers.utils.parseEther('0.08') },
+      overrides: { value: ethers.utils.parseEther(price) },
     },
   )
   return (
@@ -91,7 +92,7 @@ function MintButton({ data }: { data: Data }) {
                 }
               }}
             >
-              {isMinting ? 'minting...' : 'mint 0.08 ETH'}
+              {isMinting ? 'minting...' : `mint ${[price]} ETH`}
             </p>
           )}
           {!connection && (
