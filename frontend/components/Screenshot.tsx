@@ -142,7 +142,6 @@ export function Screenshot({
           src={data.image}
           width={data.width}
           height={data.height}
-          layout="responsive"
         />
       ) : (
         <Link href={`/s/${data.id}`}>
@@ -152,7 +151,6 @@ export function Screenshot({
               src={data.image}
               width={data.width}
               height={data.height}
-              layout="responsive"
             />
           </a>
         </Link>
