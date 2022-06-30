@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: { domains: ['luke.cat', 'blotcdn.com', 'blot.im'] },
+  experimental: { images: { allowFutureImage: true } },
 }
 
 module.exports = nextConfig

@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from 'next/future/image'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import {
