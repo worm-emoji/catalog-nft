@@ -15,7 +15,7 @@ import abi from '../eth/abi.json'
 import Link from 'next/link'
 
 const zero = '0x0000000000000000000000000000000000000000'
-const price = '0.05'
+const price = '0.0123'
 
 function substrAddress(address: string) {
   return address.substr(0, 6) + '...' + address.substr(address.length - 4)
