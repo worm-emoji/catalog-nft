@@ -7,6 +7,7 @@ import { lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit'
 import { chains, wagmiClient } from '../eth'
 import type { AppProps } from 'next/app'
 import Header from '../components/Header'
+import { PriceProvider } from '../components/PriceProvider'
 
 const cat = merge(lightTheme(), {
   fonts: {
@@ -18,8 +19,10 @@ function Cat({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={cat}>
-        <Header />
-        <Component {...pageProps} />
+        <PriceProvider>
+          <Header />
+          <Component {...pageProps} />
+        </PriceProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   )
