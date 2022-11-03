@@ -5,15 +5,10 @@ import merge from 'lodash.merge'
 import { WagmiConfig } from 'wagmi'
 import { lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit'
 import { chains, wagmiClient } from '../eth'
-import type { AppContext, AppProps as NextAppProps } from 'next/app'
+import type { AppProps } from 'next/app'
 import Header from '../components/Header'
 import { PriceProvider } from '../components/PriceProvider'
-import {
-  getOwnership,
-  OwnershipContextType,
-  OwnershipProvider,
-} from '../components/OwnershipProvider'
-import App from 'next/app'
+import { OwnershipProvider } from '../components/OwnershipProvider'
 
 const cat = merge(lightTheme(), {
   fonts: {
@@ -21,18 +16,12 @@ const cat = merge(lightTheme(), {
   },
 } as Theme)
 
-type CustomAppProps = {
-  ownership: OwnershipContextType
-}
-
-type AppProps = NextAppProps & CustomAppProps
-
-function Cat({ Component, pageProps, ownership }: AppProps) {
+function Cat({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={cat}>
         <PriceProvider>
-          <OwnershipProvider ownership={ownership}>
+          <OwnershipProvider>
             <Header />
             <Component {...pageProps} />
           </OwnershipProvider>
@@ -40,15 +29,6 @@ function Cat({ Component, pageProps, ownership }: AppProps) {
       </RainbowKitProvider>
     </WagmiConfig>
   )
-}
-
-Cat.getInitialProps = async (appCtx: AppContext): Promise<CustomAppProps> => {
-  const [ownership, props] = await Promise.all([
-    getOwnership(),
-    App.getInitialProps(appCtx),
-  ])
-
-  return { ...props, ownership }
 }
 
 export default Cat

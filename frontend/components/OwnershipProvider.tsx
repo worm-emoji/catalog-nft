@@ -1,6 +1,32 @@
 import { BigNumber } from 'ethers'
-import { createContext, ReactNode, useContext } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { contractAddress } from '../eth'
+
+const getOwnership = async (): Promise<OwnershipContextType> => {
+  // fetch ownership from the Alchemy API
+  const apiToken = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+  const url = `https://eth-mainnet.g.alchemy.com/nft/v2/${apiToken}/getOwnersForCollection?contractAddress=${contractAddress}&withTokenBalances=true`
+  const response = await fetch(url, {
+    headers: {
+      accept: 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    console.error(response)
+    throw new Error('Failed to fetch ownership')
+  }
+
+  const json = await response.json()
+
+  return json
+}
 
 export type OwnershipContextType = {
   ownerAddresses: {
@@ -16,13 +42,15 @@ const OwnershipContext = createContext<OwnershipContextType>(
   {} as OwnershipContextType,
 )
 
-export const OwnershipProvider = ({
-  children,
-  ownership,
-}: {
-  children: ReactNode
-  ownership: OwnershipContextType
-}) => {
+export const OwnershipProvider = ({ children }: { children: ReactNode }) => {
+  const [ownership, setOwnership] = useState<OwnershipContextType>({
+    ownerAddresses: [],
+  })
+
+  useEffect(() => {
+    getOwnership().then(setOwnership)
+  }, [])
+
   return (
     <OwnershipContext.Provider value={ownership}>
       {children}
@@ -50,24 +78,4 @@ export const useOwnershipOfToken = (tokenId: string): string | undefined => {
   }
 
   return owners[0].ownerAddress
-}
-
-export const getOwnership = async (): Promise<OwnershipContextType> => {
-  // fetch ownership from the Alchemy API
-  const apiToken = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-  const url = `https://eth-mainnet.g.alchemy.com/nft/v2/${apiToken}/getOwnersForCollection?contractAddress=${contractAddress}&withTokenBalances=true`
-  const response = await fetch(url, {
-    headers: {
-      accept: 'application/json',
-    },
-  })
-
-  if (!response.ok) {
-    console.error(response)
-    throw new Error('Failed to fetch ownership')
-  }
-
-  const json = await response.json()
-
-  return json
 }
