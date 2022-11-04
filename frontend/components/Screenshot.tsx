@@ -1,6 +1,6 @@
 import Image from 'next/future/image'
 import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   useContractRead,
   useContractWrite,
@@ -14,21 +14,15 @@ import { Data } from '../data/posts'
 import abi from '../eth/abi.json'
 import Link from 'next/link'
 import { usePrice } from './PriceProvider'
-
-const zero = '0x0000000000000000000000000000000000000000'
+import { useOwnershipOfToken } from './OwnershipProvider'
 
 function substrAddress(address: string) {
   return address.substr(0, 6) + '...' + address.substr(address.length - 4)
 }
 
 function OwnedBy({ address }: { address: string }) {
-  const { data, isError, isLoading } = useEnsName({ address })
-  if (isLoading) {
-    return <></>
-  }
-  if (isError) {
-    return <p className="pt-1 text-white text-center">{address}</p>
-  }
+  const { data } = useEnsName({ address })
+
   return (
     <p className="pt-1 text-white text-center">
       owned by{' '}
@@ -48,20 +42,10 @@ function MintButton({ data }: { data: Data }) {
   const { data: connection } = useAccount()
   const [isMinting, setIsMinting] = useState(false)
 
-  const isOwned = useContractRead(
-    {
-      addressOrName: contractAddress,
-      contractInterface: abi,
-    },
-    'ownerOf',
-    {
-      args: data.id,
-      cacheOnBlock: false,
-      suspense: true,
-    },
-  )
+  const ownerFromContext = useOwnershipOfToken(data.id?.toString() ?? '0')
+  const [owner, setOwner] = useState(ownerFromContext)
 
-  const canMint = !isOwned.data || isOwned.data.toString() == zero
+  const canMint = owner === undefined
 
   const price = usePrice()
 
@@ -75,11 +59,21 @@ function MintButton({ data }: { data: Data }) {
       args: [data.id, data.signature],
       onSettled: () => {
         setIsMinting(false)
-        isOwned.refetch()
+        if (connection?.address !== undefined) {
+          setOwner(connection.address)
+        }
       },
       overrides: { value: ethers.utils.parseEther(price) },
     },
   )
+
+  const handleMint = useCallback(() => {
+    if (!isMinting) {
+      setIsMinting(true)
+      write()
+    }
+  }, [isMinting, write])
+
   return (
     <div className="h-10">
       {canMint ? (
@@ -87,14 +81,9 @@ function MintButton({ data }: { data: Data }) {
           {connection && (
             <p
               className="pt-1 text-white text-center cursor-pointer"
-              onClick={() => {
-                if (!isMinting) {
-                  setIsMinting(true)
-                  write()
-                }
-              }}
+              onClick={handleMint}
             >
-              {isMinting ? 'minting...' : `mint ${[price]} ETH`}
+              {isMinting ? 'minting...' : `mint ${price} ETH`}
             </p>
           )}
           {!connection && (
@@ -106,11 +95,7 @@ function MintButton({ data }: { data: Data }) {
           )}
         </>
       ) : (
-        <>
-          {isOwned.isSuccess && isOwned.data && (
-            <OwnedBy address={isOwned.data.toString()} />
-          )}
-        </>
+        <>{owner !== undefined && <OwnedBy address={owner} />}</>
       )}
     </div>
   )
