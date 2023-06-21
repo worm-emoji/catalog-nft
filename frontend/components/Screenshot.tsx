@@ -28,7 +28,7 @@ function OwnedBy({ address }: { address: string }) {
       owned by{' '}
       <a
         className="underline underline-offset-3"
-        href={`https://context.app/${address}?collection=screenshot-catalog-by-worm_emoji`}
+        href={`https://opensea.io/${address}?search%5Bcollections%5D%5B0%5D=screenshot-catalog-by-worm-emoji`}
         target="_blank"
         rel="noreferrer"
       >
