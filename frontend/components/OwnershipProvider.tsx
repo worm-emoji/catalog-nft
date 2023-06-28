@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers'
 import {
   createContext,
   ReactNode,
@@ -7,6 +6,7 @@ import {
   useState,
 } from 'react'
 import { contractAddress } from '../eth'
+import { Address } from "wagmi";
 
 const getOwnership = async (): Promise<OwnershipContextType> => {
   // fetch ownership from the Alchemy API
@@ -30,7 +30,7 @@ const getOwnership = async (): Promise<OwnershipContextType> => {
 
 export type OwnershipContextType = {
   ownerAddresses: {
-    ownerAddress: string
+    ownerAddress: Address
     tokenBalances: {
       tokenId: string
       balance: number
@@ -58,18 +58,17 @@ export const OwnershipProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
-export const useOwnershipOfToken = (tokenId: string): string | undefined => {
+export const useOwnershipOfToken = (tokenId: string): Address | undefined => {
   // token ID is a string of a decimal number
   // i.e. "1234567890"
   // and the API response is a hex string
   // i.e. "0x000000000000000000000000000000000000000000000000000000005d74bb36"
 
   const value = useContext(OwnershipContext)
-  const tokenHex = BigNumber.from(tokenId)
 
   const owners = value.ownerAddresses.filter((owner) => {
     return owner.tokenBalances.some((balance) => {
-      return BigNumber.from(balance.tokenId).eq(tokenHex)
+      return BigInt(balance.tokenId) === BigInt(tokenId)
     })
   })
 

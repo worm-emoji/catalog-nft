@@ -1,6 +1,7 @@
 import cheerio from 'cheerio'
 import orderBy from 'lodash.orderby'
 import { getSignature } from './sign'
+import { Hex } from "viem";
 
 export type Data = {
   error?: boolean
@@ -9,8 +10,8 @@ export type Data = {
   external_url?: string
   name?: string
   image?: string
-  signature?: string
-  id?: number
+  signature: Hex
+  id: number
   width?: number
   height?: number
   attributes?: {
@@ -18,13 +19,6 @@ export type Data = {
     value: string | number
     display_type?: string
   }[]
-}
-
-export interface Thumbnails {
-  small?: Thumbnail
-  medium?: Thumbnail
-  large?: Thumbnail
-  square?: Thumbnail
 }
 
 export interface Thumbnail {
@@ -89,37 +83,39 @@ export async function getAllPosts(): Promise<{
   const allPosts: { [key: string]: Data } = {}
 
   const posts = orderBy(
-    allEntries.map((post) => {
-      const $ = cheerio.load(post.html)
-      const url = $('img').attr('src')
-      const width = Number($('img').attr('width'))
-      const height = Number($('img').attr('height'))
+    await Promise.all(
+      allEntries.map(async (post) => {
+        const $ = cheerio.load(post.html)
+        const url = $('img').attr('src')
+        const width = Number($('img').attr('width'))
+        const height = Number($('img').attr('height'))
 
-      const ts = post.updated / 1000
-      const signature = getSignature(ts)
-      const p = {
-        id: ts,
-        image: url,
-        name: getName(new Date(post.updated)),
-        external_url: post.absoluteURL,
-        signature,
-        width,
-        height,
-        attributes: [
-          {
-            trait_type: 'Year',
-            value: new Date(post.updated).getFullYear().toString(),
-          },
-          {
-            display_type: 'date',
-            trait_type: 'taken at',
-            value: ts,
-          },
-        ],
-      }
-      allPosts[ts] = p
-      return p
-    }),
+        const ts = post.updated / 1000
+        const signature = await getSignature(ts)
+        const p: Data = {
+          id: ts,
+          image: url,
+          name: getName(new Date(post.updated)),
+          external_url: post.absoluteURL,
+          signature,
+          width,
+          height,
+          attributes: [
+            {
+              trait_type: 'Year',
+              value: new Date(post.updated).getFullYear().toString(),
+            },
+            {
+              display_type: 'date',
+              trait_type: 'taken at',
+              value: ts,
+            },
+          ],
+        }
+        allPosts[ts] = p
+        return p
+      })
+    ),
     'id',
     'desc',
   )

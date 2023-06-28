@@ -2,9 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Data } from '../../../data/posts'
 import { getAllPosts } from '../../../data/posts'
 
+type Error = Pick<Data, 'error' | 'message'>
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>,
+  res: NextApiResponse<Data | Error>,
 ) {
   const { tokenID } = req.query
   if (typeof tokenID !== 'string') {

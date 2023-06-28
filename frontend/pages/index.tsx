@@ -88,7 +88,7 @@ function Home({ screenshots }: InferGetStaticPropsType<typeof getStaticProps>) {
       </div>
       <div className="grid sm:grid-cols-2 gap-2">
         {shots.map((post) => {
-          return <Screenshot key={post.id} data={post} />
+          return <Screenshot key={`${post.id}`} data={post} />
         })}
       </div>
     </div>

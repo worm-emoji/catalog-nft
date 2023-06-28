@@ -51,7 +51,7 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
           <h2 className="text-2xl text-center">{post.name}</h2>
         </div>
       </div>
-      <Screenshot key={post.id} data={post} isIndex />
+      <Screenshot key={`${post.id}`} data={post} isIndex />
 
       <p className="text-center text-white underline-offset-2 underline pt-12">
         <Link href="/">

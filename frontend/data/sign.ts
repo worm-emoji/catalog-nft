@@ -1,15 +1,16 @@
-import { ethers } from 'ethers'
-import { keccak256 } from '@ethersproject/keccak256'
-import { env } from 'process'
+import { encodeAbiParameters, Hex, keccak256, parseAbiParameters } from 'viem'
+import { privateKeyToAccount } from "viem/accounts";
 
-const key = new ethers.utils.SigningKey(env.SIGNING_KEY || '')
-const coder = new ethers.utils.AbiCoder()
+const account = privateKeyToAccount(process.env.SIGNING_KEY as Hex)
 
-export const getSignature = (id: number): string => {
+export const getSignature = (id: number): Promise<Hex> => {
   // pack id as an ABI encoded string (solidity does same)
-  const encoded = coder.encode(['uint256'], [id])
+  const encoded = encodeAbiParameters(
+      parseAbiParameters('uint256'),
+      [BigInt(id)]
+  )
   // keccak256 hash
   const hash = keccak256(encoded)
   // sign with pk
-  return key.signDigest(hash).compact
+  return account.signMessage({ message: hash })
 }
