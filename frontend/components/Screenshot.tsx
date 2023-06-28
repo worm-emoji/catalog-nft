@@ -1,27 +1,22 @@
 import Image from 'next/future/image'
-import { ethers } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
-import {
-  useContractRead,
-  useContractWrite,
-  useEnsName,
-  useAccount,
-} from 'wagmi'
+import { useContractWrite, useEnsName, useAccount, Address } from 'wagmi'
 import { useInView } from 'react-intersection-observer'
 
 import { contractAddress } from '../eth'
 import { Data } from '../data/posts'
-import abi from '../eth/abi.json'
+import { abi } from '../eth/abi'
 import Link from 'next/link'
 import { usePrice } from './PriceProvider'
 import { useOwnershipOfToken } from './OwnershipProvider'
+import { Hex, parseEther } from 'viem'
 
 function substrAddress(address: string) {
   return address.substr(0, 6) + '...' + address.substr(address.length - 4)
 }
 
 function OwnedBy({ address }: { address: string }) {
-  const { data } = useEnsName({ address })
+  const { data } = useEnsName({ address: address as Address })
 
   return (
     <p className="pt-1 text-white text-center">
@@ -39,7 +34,7 @@ function OwnedBy({ address }: { address: string }) {
 }
 
 function MintButton({ data }: { data: Data }) {
-  const { data: connection } = useAccount()
+  const { address } = useAccount()
   const [isMinting, setIsMinting] = useState(false)
 
   const ownerFromContext = useOwnershipOfToken(data.id?.toString() ?? '0')
@@ -49,23 +44,22 @@ function MintButton({ data }: { data: Data }) {
 
   const price = usePrice()
 
-  const { write } = useContractWrite(
-    {
-      addressOrName: contractAddress,
-      contractInterface: abi,
+  const { write } = useContractWrite({
+    abi,
+    address: contractAddress,
+    functionName: 'mint',
+    args:
+      data.id !== undefined && data.signature !== undefined
+        ? [BigInt(data.id), data.signature as Hex]
+        : undefined,
+    value: parseEther(price),
+    onSettled: () => {
+      setIsMinting(false)
+      if (address !== undefined) {
+        setOwner(address)
+      }
     },
-    'mint',
-    {
-      args: [data.id, data.signature],
-      onSettled: () => {
-        setIsMinting(false)
-        if (connection?.address !== undefined) {
-          setOwner(connection.address)
-        }
-      },
-      overrides: { value: ethers.utils.parseEther(price) },
-    },
-  )
+  })
 
   const handleMint = useCallback(() => {
     if (!isMinting) {
@@ -78,7 +72,7 @@ function MintButton({ data }: { data: Data }) {
     <div className="h-10">
       {canMint ? (
         <>
-          {connection && (
+          {address && (
             <p
               className="pt-1 text-white text-center cursor-pointer"
               onClick={handleMint}
@@ -86,7 +80,7 @@ function MintButton({ data }: { data: Data }) {
               {isMinting ? 'minting...' : `mint ${price} ETH`}
             </p>
           )}
-          {!connection && (
+          {!address && (
             <div>
               <p className="pt-1 text-white text-center">
                 connect wallet to mint

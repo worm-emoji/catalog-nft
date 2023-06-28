@@ -1,8 +1,8 @@
 import { createContext, useContext, useMemo } from 'react'
 import { useContractRead } from 'wagmi'
-import abi from '../eth/abi.json'
+import { abi } from '../eth/abi'
 import { contractAddress } from '../eth'
-import { formatEther } from 'ethers/lib/utils'
+import { formatEther } from 'viem'
 
 type PriceContextValue = {
   price: string
@@ -11,13 +11,11 @@ type PriceContextValue = {
 const PriceContext = createContext<PriceContextValue>({} as PriceContextValue)
 
 export const PriceProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data } = useContractRead(
-    {
-      contractInterface: abi,
-      addressOrName: contractAddress,
-    },
-    'mintPrice',
-  )
+  const { data } = useContractRead({
+    abi,
+    address: contractAddress,
+    functionName: 'mintPrice',
+  })
 
   const contractPrice = useMemo(
     () => (data !== undefined ? formatEther(data) : undefined),

@@ -1,4 +1,4 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { ConnectKitButton } from 'connectkit'
 import Link from 'next/link'
 
 export default function Header() {
@@ -10,7 +10,7 @@ export default function Header() {
         </Link>
       </div>
       <div>
-        <ConnectButton />
+        <ConnectKitButton />
       </div>
     </div>
   )
