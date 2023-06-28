@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers'
 import {
   createContext,
   ReactNode,
@@ -65,11 +64,11 @@ export const useOwnershipOfToken = (tokenId: string): string | undefined => {
   // i.e. "0x000000000000000000000000000000000000000000000000000000005d74bb36"
 
   const value = useContext(OwnershipContext)
-  const tokenHex = BigNumber.from(tokenId)
+  const tokenHex = BigInt(tokenId)
 
   const owners = value.ownerAddresses.filter((owner) => {
     return owner.tokenBalances.some((balance) => {
-      return BigNumber.from(balance.tokenId).eq(tokenHex)
+      return BigInt(balance.tokenId) === tokenHex
     })
   })
 
